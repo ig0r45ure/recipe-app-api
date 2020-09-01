@@ -35,3 +35,77 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+
+class OrgUnit(models.Model):
+    """Organizational Unit who is owner of processes or does activities"""
+    name = models.CharField(max_length=255)
+    acronym = models.CharField(max_length=3, blank=True, default='')
+
+    def __str__(self):
+        return self.name
+
+
+class Process(models.Model):
+    """Business process - element of management architecture"""
+    name = models.CharField(max_length=255)
+    proc_id = models.CharField(max_length=4)
+    is_megaprocess = models.BooleanField(default=False)
+    type = models.CharField(max_length=255)
+    owner = models.ForeignKey(
+        'OrgUnit',
+        on_delete=models.CASCADE,
+    )
+    parent = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        limit_choices_to={'is_megaprocess': True}
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class Product(models.Model):
+    """Products are input or output of activities"""
+    name = models.CharField(max_length=255)
+    type = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.name
+
+
+class Activity(models.Model):
+    """Activity is a part of a process performed that has defined
+        input and products"""
+    name = models.CharField(max_length=255)
+    input = models.ForeignKey(
+        'Product',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name='+',
+    )
+    product = models.ForeignKey(
+        'Product',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name='+',
+    )
+    process = models.ForeignKey(
+        'Process',
+        on_delete=models.CASCADE,
+        limit_choices_to={'is_megaprocess': False}
+    )
+    performer = models.ForeignKey(
+        'OrgUnit',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+
+    def __str__(self):
+        return self.name
