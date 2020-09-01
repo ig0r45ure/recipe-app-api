@@ -41,6 +41,7 @@ class OrgUnit(models.Model):
     """Organizational Unit who is owner of processes or does activities"""
     name = models.CharField(max_length=255)
     acronym = models.CharField(max_length=3, blank=True, default='')
+    is_HQUnit = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

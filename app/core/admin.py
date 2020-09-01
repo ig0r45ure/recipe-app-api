@@ -28,3 +28,5 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.OrgUnit)
 admin.site.register(models.Process)
+admin.site.register(models.Product)
+admin.site.register(models.Activity)
