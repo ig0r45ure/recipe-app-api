@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/user/', include('user.urls')),
     path('api/eramis/', include('eramis.urls')),
+    path('files/', include('import_csv.urls')),
 ]

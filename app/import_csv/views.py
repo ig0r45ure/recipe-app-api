@@ -1,7 +1,8 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .forms import UploadFileForm
+from django.urls import reverse
 
+from .forms import UploadFileForm
 from .apps import handle_uploaded_file
 
 
@@ -10,7 +11,7 @@ def upload_file(request):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             handle_uploaded_file(request.FILES['file'])
-            return HttpResponseRedirect('/success/url/')
+            return HttpResponseRedirect(reverse('app_name:upload'))
     else:
         form = UploadFileForm()
-    return render(request, 'upload.html', {'form': form})
+    return render(request, 'import_csv/upload.html', {'form': form})

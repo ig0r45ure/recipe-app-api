@@ -7,7 +7,9 @@ from core.models import OrgUnit
 from eramis import serializers
 
 
-class OrgUnitViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+class OrgUnitViewSet(viewsets.GenericViewSet,
+                     mixins.ListModelMixin,
+                     mixins.CreateModelMixin):
     """Manage org units in the database"""
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -15,5 +17,9 @@ class OrgUnitViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     serializer_class = serializers.OrgUnitSerializer
 
     def get_queryset(self):
-        """Return objects"""
+        """Return org units objects"""
         return self.queryset.order_by('-is_HQUnit', 'acronym', )
+
+    def perform_create(self, serializer):
+        """Create a new org unit"""
+        serializer.save()
