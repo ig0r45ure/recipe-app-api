@@ -8,7 +8,10 @@ RUN apk add --update --no-cache postgresql-client
 RUN apk add --update --no-cache --virtual .tmp-build-deps \
       gcc libc-dev linux-headers postgresql-dev
 
-RUN pip install -r /requirements.txt
+ENV PATH=$PATH:/home/user/.local/bin:/usr/local/lib/python3.7/site-packages
+RUN echo $PATH
+
+RUN pip3 install -r ./requirements.txt
 
 RUN apk del .tmp-build-deps
 

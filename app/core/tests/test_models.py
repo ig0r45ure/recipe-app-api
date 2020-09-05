@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-from core.models import OrgUnit, Process, Product, Activity
+from core.models import OrgUnit, Process
 
 
 def sample_process():
@@ -70,7 +70,10 @@ class ModelTests(TestCase):
             acronym='DKK'
         )
 
-        self.assertEqual(str(org_unit), org_unit.name)
+        self.assertEqual(
+            str(org_unit),
+            '%s - %s' % (org_unit.name, org_unit.acronym),
+        )
 
     def test_org_unit_with_null_str(self):
         """Test the Organizational Unit without acronym string"""
@@ -104,33 +107,11 @@ class ModelTests(TestCase):
             parent=megaprocess,
         )
 
-        self.assertEqual(str(megaprocess), megaprocess.name)
-        self.assertEqual(str(process), process.name)
-
-    def test_product_str(self):
-        """Test creating an product"""
-        product = Product.objects.create(
-            name='Uzyskanie zasiłku',
-            type='USŁUGA',
+        self.assertEqual(
+            str(megaprocess),
+            '%s %s' % (megaprocess.proc_id, megaprocess.name),
         )
-
-        self.assertEqual(str(product), product.name)
-
-    def test_activity_str(self):
-        """Test creating an activity"""
-        strategy = Product.objects.create(
-            name='Strategia ZUS',
-            type='DOKUMENT'
+        self.assertEqual(
+            str(process),
+            '%s %s' % (process.proc_id, process.name),
         )
-        activity = Activity.objects.create(
-            name='Opracowanie, monitorowanie i aktualizacja strategii Zakładu',
-            input=None,
-            product=strategy,
-            process=sample_process(),
-            performer=OrgUnit.objects.create(
-                name='Departament Kontrolingu',
-                acronym='DKK'
-            ),
-        )
-
-        self.assertEqual(str(activity), activity.name)
